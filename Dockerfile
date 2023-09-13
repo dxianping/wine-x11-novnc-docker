@@ -35,7 +35,7 @@ autorestart=false\n\
 stdout_logfile=/dev/fd/1\n\
 stdout_logfile_maxbytes=0\n\
 redirect_stderr=true\n\
-user=dev\n\
+user=$USER\n\
 "
 
 #--------------apt mirrors--------------
