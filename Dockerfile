@@ -23,7 +23,7 @@ ARG SupervisorConfig="\
 nodaemon=true\n\
 \n\
 [program:VncServer]\n\
-command=/opt/startvnc dev 1600x900 24\n\
+command=/opt/startvnc $USER 1600x900 24\n\
 autorestart=false\n\
 stdout_logfile=/dev/fd/1\n\
 stdout_logfile_maxbytes=0\n\
