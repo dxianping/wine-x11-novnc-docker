@@ -182,7 +182,7 @@ RUN \
 
 #-------------- install novnc
 RUN \
-	python3 -m pip install numpy &&\
+	python3 -m pip install numpy -i https://pypi.tuna.tsinghua.edu.cn/simple &&\
 	mkdir -p $APPS_DIR &&\
 	echo $StartVNC_CMD > $APPS_DIR/startvnc && chmod +x $APPS_DIR/startvnc &&\
 	wget -O - https://ghproxy.com/https://github.com/novnc/websockify/archive/refs/tags/v0.11.0.tar.gz | tar -xzv -C $APPS_DIR && \
