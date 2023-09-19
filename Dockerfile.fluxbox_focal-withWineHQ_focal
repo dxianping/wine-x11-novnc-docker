@@ -47,7 +47,8 @@ ARG USER_PASS=admin
 # default store directory
 ARG USER_HOME_DIR="/usr/local/$USER"
 ARG APPS_DIR="$USER_HOME_DIR/apps"
-ARG NoVNC_Token_Dir="$APPS_DIR/novnc/tokens.conf"
+ARG VNC_USER_DIR="/etc/VncServer/user"
+ARG NoVNC_Token_Dir="/tmp/.VncServer/tokens.conf"
 
 #--------------start VNC script--------------
 ARG VncBasePort=5900
@@ -57,17 +58,20 @@ rm -rf /tmp/.X*-lock\n\
 killall tightvncserver\n\
 DisplayResolution=1600x900\n\
 DisplayDepth=24\n\
-UserList=$(ls $NoVNC_Token_Dir)\n\
+UserList=$(ls $VNC_USER_DIR)\n\
 idx=0\n\
 if [ -z \$UserList ]; then\n\
 echo 'no user'\n\
 exit\n\
 fi\n\
 \n\
+mkdir -p $NoVNC_Token_Dir\n\
 for user in \$UserList;do\n\
-	echo running user:\$user idx:\$idx;\n\
-	sudo -u \$user -- tightvncserver :\$idx -geometry \$DisplayResolution -depth \$DisplayDepth -rfbport $(expr $VncBasePort + \$idx)\n\
-	idx=$(expr \$idx + 1)\n\
+	vncPort=\$(expr 5900 + \$idx);\n\
+	echo running user:\$user idx:\$idx vncPort:\$vncPort;\n\
+	echo \$user: 127.0.0.1:\$vncPort > $NoVNC_Token_Dir/\$user;\n\
+	sudo -u \$user -- tightvncserver :\$idx -geometry \$DisplayResolution -depth \$DisplayDepth -rfbport \$vncPort\n\
+	idx=\$(expr \$idx + 1)\n\
 done\n\
 "
 
@@ -164,11 +168,6 @@ ARG FluxboxMenu="\
 [end]\n\
 "
 
-#--------------noVNC Default Token--------------
-ARG NoVncDefaultToken="\
-$USER: 127.0.0.1:$VncBasePort\n\
-"
-
 
 #--------------Main run process--------------
 RUN \
@@ -193,8 +192,7 @@ RUN \
 			mv $APPS_DIR/noVNC-1.4.0 $APPS_DIR/novnc && \
 			ln -s $APPS_DIR/novnc/vnc_lite.html $APPS_DIR/novnc/index.html &&\
 			mv $APPS_DIR/websockify-0.11.0 $APPS_DIR/novnc/utils/websockify  &&\
-			mkdir -p $NoVNC_Token_Dir &&\
-			echo $NoVncDefaultToken > $NoVNC_Token_Dir/$USER && \
+			mkdir -p $VNC_USER_DIR && touch $VNC_USER_DIR/$USER &&\
 	mkdir -p /var/lib/locales/supported.d&&\
 	echo "LC_ALL=C.UTF-8\nLANG=en_US.UTF-8\nLANGUAGE=en_US.UTF-8" >> /etc/environment &&\
 	locale-gen && \
