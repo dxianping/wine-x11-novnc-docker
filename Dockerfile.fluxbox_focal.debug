@@ -20,7 +20,7 @@ ARG APT_PKG_default="sudo wget tar nano xz-utils net-tools nano"
 ARG APT_PKG_daemon="supervisor"
 ARG APT_PKG_desktop="fluxbox lxterminal pcmanfm"
 ARG APT_PKG_vnc="tightvncserver python3-pip"
-ARG APT_PKG_lang="language-pack-zh-hans fonts-droid-fallback ttf-wqy-zenhei ttf-wqy-microhei fonts-arphic-ukai fonts-arphic-uming"
+ARG APT_PKG_lang="language-pack-en language-pack-en-base language-pack-zh-hans fonts-droid-fallback ttf-wqy-zenhei ttf-wqy-microhei fonts-arphic-ukai fonts-arphic-uming"
 
 ARG APT_PKG_ALL="\
 $APT_PKG_default \
